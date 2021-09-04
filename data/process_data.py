@@ -18,29 +18,29 @@ import sqlite3
 
 def load_data(messages_filepath, categories_filepath):
     '''
-    Load in messages and categories data, output merged file
-   
+    Load messages dataset and categories dataset,
+    The output is a merged file of the two datasets   
     '''
     # load messages dataset
     messages = pd.read_csv(messages_filepath)
     # load categories dataset
     categories = pd.read_csv(categories_filepath)
     # merge datasets
-    df = messages.merge(categories,on=['id'],how='left')
+    df = messages.merge(categories, how='left', on=['id'])
     
     return df
 
 
 
-def clean_data(df):
+def clean_data(df_):
     '''
     1. Split categories into separate category columns.
     2. Convert category values to just numbers 0 or 1.
     3. Replace categories column in df with new category columns.
     4. Remove duplicates.
-    
-    :param df: input data
+
     '''
+    
     # create a dataframe of the 36 individual category columns
     categories = pd.DataFrame(df.categories.str.split(';',expand=True))
     # select the first row of the categories dataframe
@@ -52,34 +52,34 @@ def clean_data(df):
     # rename the columns of `categories`
     categories.columns = category_colnames
     
-    for column in categories:
+    for col in categories:
         # set each value to be the last character of the string
-        categories[column] = categories[column]\
-            .astype(str).str.split('-').apply(lambda x:x[1])
+        categories[col] = categories[col].astype(str).str.split('-').apply(lambda x:x[1])
         # convert column from string to numeric
-        categories[column] = categories[column].astype(int)
+        categories[col] = categories[col].astype(int)
         
     # drop the original categories column from `df`
-    df = df.drop(columns=['categories'])
+    df_ = df_.drop(columns=['categories'])
     # concatenate the original dataframe with the new `categories` dataframe
-    df = pd.concat([df,categories],axis=1)
+    df_ = pd.concat([df_,categories],axis=1)
     # drop duplicates
-    df = df.drop_duplicates()
+    df_ = df_.drop_duplicates()
     
-    return df
+    return df_
 
 
-def save_data(df, database_filename):
+def save_data(df_, database_filename):
     '''
-    Save data into database
+    convert the data into database
     
-    :param df: input data
-    :param database_filename: database file name
+    Parameters:
+        df: input data
+        database_filename: database file name
     '''
     # Create database engine
     engine = create_engine('sqlite:///'+database_filename)
     # Save df to database
-    df.to_sql('disaster_response', engine, index=False)
+    df_.to_sql('disaster_response', engine, index=False)
  
 
 
