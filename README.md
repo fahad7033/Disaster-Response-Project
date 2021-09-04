@@ -1,6 +1,7 @@
 
 # Disaster-Response-Project
 <b>Overview of the project  </b>
+
 In this project, the disaster data from Figure Eight was analyzed to build and train a model for classifying messages.
 
 ETL and machine learning pipelines were created as a procedure of data engineering, then the mode was trained on the processed data.
