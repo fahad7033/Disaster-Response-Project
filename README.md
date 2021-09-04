@@ -7,6 +7,7 @@ In this project, the disaster data from Figure Eight was analyzed to build and t
 ETL and machine learning pipelines were created as a procedure of data engineering, then the mode was trained on the processed data.
 
 <b> To run the files: </b>
+
 To run ETL pipeline that cleans data and stores in database:
  python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db
 
