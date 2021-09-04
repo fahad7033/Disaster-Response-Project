@@ -21,11 +21,7 @@ from sklearn.externals import joblib
 
 
 def load_data(database_filepath):
-    '''
-    Load data from database file path, output feature set, target and target categories
-    
-    :param database_filepath: database file path
-    '''
+   
     # load data from database
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('disaster_response',engine)
@@ -43,10 +39,10 @@ def tokenize(text):
     
     # Get clean tokens after lemmatization, normalization, stripping and stop words removal
     clean_tokens = []
-    for tok in tokens:
-        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
-        if tok not in stopWords:
-            clean_tokens.append(clean_tok)
+    for token in tokens:
+        clean_token = lemmatizer.lemmatize(token).lower().strip()
+        if token not in stopWords:
+            clean_tokens.append(clean_token)
 
     return clean_tokens
 
@@ -55,17 +51,14 @@ def tokenize(text):
 class TextLengthExtractor(BaseEstimator, TransformerMixin):
     '''
     An estimator that can count the text length of each cell in the X
-    
+    Output:
     '''
-    def fit(self, X, y=None):
-    	'''
-    	Return self
-    	'''
+    def fit(self, X, y=None):    	
     	return self
 
     def transform(self, X):
     	'''
-    	Count the text length of each cell in the X
+    	Count the text length 
     	'''
     	X_length = pd.Series(X).str.len()
     	return pd.DataFrame(X_length)
@@ -73,11 +66,11 @@ class TextLengthExtractor(BaseEstimator, TransformerMixin):
 
 def build_model():
     '''
-    Build a pipeline with TFIDF DTM, length of text column, and a random forest classifier. Grid search on the `use_idf` from tf_idf and `n_estimators` from random forest classifier to find the best model
-    
-    :param text: input text
+    Build a pipeline with TFIDF DTM, 
+    Parameters:
+    text: input text
     '''
-    # Build out the pipeline
+    # Build the pipeline
     pipeline = Pipeline([
         ('features', FeatureUnion([
 
@@ -97,18 +90,19 @@ def build_model():
         'clf__estimator__n_estimators': [50, 100]
     }
     # Initialize GridSearch cross validation object
-    cv = GridSearchCV(pipeline, param_grid=parameters,n_jobs=-1)
+    cv_ = GridSearchCV(pipeline, param_grid=parameters,n_jobs=-1)
 
-    return cv
+    return cv_
 
 def evaluate_model(model, X_test, Y_test, category_names):
     '''
     Evaluate the model performance of each category target column
     
-    :param model: model object
-    :param X_test: test feature set
-    :param Y_test: test target set
-    :param category_names: target category names
+    Parameters:
+        model: model object
+        X_test: test feature set
+        Y_test: test target set
+        category_names: target category names
     '''
     # Use model to predict
     Y_pred = model.predict(X_test)
@@ -116,7 +110,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Y_pred = pd.DataFrame(Y_pred,columns=category_names)
     # For each category column, print performance
     for col in category_names:
-        print(f'Column Name:{col}\n')
+        #print(f'Column Name:{col}\n')
         print(classification_report(Y_test[col],Y_pred[col]))
 
 
@@ -124,8 +118,9 @@ def save_model(model, model_filepath):
     '''
     Save model to a pickle file
     
-    :param model: model object
-    :param model_filepath: model output file path
+    Parameters:
+        model: model object
+        model_filepath: model output file path
     '''
     joblib.dump(model, model_filepath) 
 
