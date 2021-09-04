@@ -1,6 +1,6 @@
 
 # Disaster-Response-Project
-<b><ul>Overview of the project  </ul></b>
+<b>Overview of the project:  </b>
 
 In this project, the disaster data from Figure Eight was analyzed to build and train a model for classifying messages.
 
