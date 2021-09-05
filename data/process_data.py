@@ -58,6 +58,11 @@ def clean_data(df_):
         # convert column from string to numeric
         categories[col] = categories[col].astype(int)
         
+        #convert all the values that are higer than 1 to be 1 
+        for i in range(len(categories[col])):
+            if categories[col][i] >=1:
+                categories[col][i] = 1
+        
     # drop the original categories column from `df`
     df_ = df_.drop(columns=['categories'])
     # concatenate the original dataframe with the new `categories` dataframe
