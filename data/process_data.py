@@ -84,7 +84,7 @@ def save_data(df_, database_filename):
     # Create database engine
     engine = create_engine('sqlite:///'+database_filename)
     # Save df to database
-    df_.to_sql('disaster_response', engine, index=False)
+    df_.to_sql('DisasterResponse', engine, index=False)
  
 
 
