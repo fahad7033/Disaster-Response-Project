@@ -53,7 +53,7 @@ class TextLengthExtractor(BaseEstimator, TransformerMixin):
     
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
-df = pd.read_sql_table('disaster_response', engine)
+df = pd.read_sql_table('DisasterResponse', engine)
 
 # load model
 model = joblib.load("../models/classifier.pkl")
