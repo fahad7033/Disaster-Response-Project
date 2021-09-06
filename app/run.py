@@ -7,7 +7,7 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
+from plotly.graph_objs import Bar, Histogram
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -69,9 +69,48 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    
+    various_labels = df.drop(columns=['id','message','original','genre']).sum(axis=1)
+    pos_labels = df.drop(columns=['id','message','original','genre']).sum()
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
+        {
+            'data': [
+                Histogram(
+                    x=various_labels
+                )
+            ],
+
+            'layout': {
+                'title': 'Histogram of Various Lables Instances',
+                'yaxis': {
+                    'title': "Frequency"
+                },
+                'xaxis': {
+                    'title': "# of Various Lables"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=pos_labels.index,
+                    y=pos_labels
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of positive lables',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Output Lables"
+                }
+            }
+        },
         {
             'data': [
                 Bar(
